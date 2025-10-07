@@ -2,6 +2,25 @@ import requests
 import pandas as pd
 import time
 
+import logging
+from pathlib import Path
+
+# --- Logging setup ---
+Path("logs").mkdir(exist_ok=True)  # ensure a logs folder exists
+
+logging.basicConfig(
+    level=logging.INFO,                              # log INFO and above
+    format="%(asctime)s [%(levelname)s] %(message)s", # timestamp + level + message
+    handlers=[
+        logging.FileHandler(f"logs/{code}_fetch.log", mode="w"), # write log file
+        logging.StreamHandler()                            # also show in console
+    ]
+)
+
+logger = logging.getLogger(__name__)
+
+
+
 
 
 BASE_URL = "https://api.worldbank.org/v2/sources/14/country/{}/series/all"
@@ -21,11 +40,11 @@ def fetch_one_page(url:str, params:dict, max_retries: int =3, delay: float = 2.0
             r.raise_for_status() #fail if not HTTP error
             return r.json() #top level is a dict for this API
         except requests.exceptions.RequestException as e:
-            print(f"Attempt {attempt + 1} failed for {url} (page {params.get('page')}).Error: {e}")
+            logger.warning(f"Attempt {attempt + 1} failed for {url} (page {params.get('page')}).Error: {e}")
             if attempt < max_retries - 1:
                 time.sleep(delay * (attempt + 1)) #exponential backoff
             else:
-                print("❌ Giving up on this page.")
+                logger.error(f"❌ Giving up on {url} page {params.get('page')}.Error: {e}")
                 return{}
     
 
@@ -99,7 +118,7 @@ def parse_rows(row: dict) -> dict:
 all_country_dfs = []
 
 for code in country_codes:
-    print(f"Fetching All pages for {code} ...")
+    logger.info(f"Fetching All pages for {code} ...")
     params = {"format": "json", "per_page": 1000, "page": 1}
     url = BASE_URL.format(code)
 
@@ -123,7 +142,7 @@ for code in country_codes:
         payload_p = fetch_one_page(url, params)
         
         if not payload_p:
-            print(f"⚠️ Skipping page {p} for {code} (no response).")
+            logger.warning(f"⚠️ Skipping page {p} for {code} (no response).")
             continue
         
         rows_p = payload.get("source", {}).get("data", [])
@@ -133,7 +152,7 @@ for code in country_codes:
             
             #After you parse a page, check if it’s empty — if so, you can break early:
             
-            print(f"ℹ️ Page {p} for {code} is empty — stopping early.")
+            logger.info(f"ℹ️ Page {p} for {code} is empty — stopping early.")
             break
         
         df_p["value"] = pd.to_numeric(df_p["value"], errors="coerce")
@@ -154,10 +173,10 @@ for code in country_codes:
 # Combine the first pages from all countries
 df = pd.concat(all_country_dfs, ignore_index=True) if all_country_dfs else pd.DataFrame()
 print("\nFinal Summary:")
-print("Total rows:", len(df))
+logger.info("Total rows:", len(df))
 if not df.empty:
-    print("Unique countries:", df['country_id'].nunique())
-    print("Unique series:", df['series_id'].nunique())
+    logger.info("Unique countries:", df['country_id'].nunique())
+    logger.info("Unique series:", df['series_id'].nunique())
 
 
     

@@ -1,0 +1,18 @@
+| Step | Action                                            | Purpose                                |
+| ---- | ------------------------------------------------- | -------------------------------------- |
+| 1    | Add `import logging` + `basicConfig()`            | Set up log folder + format             |
+| 2    | Replace `print()` calls with `logger.info()` etc. | Structured progress tracking           |
+| 3    | Use logging inside retry logic                    | See which pages failed                 |
+| 4    | Log summary results                               | Record total rows & success count      |
+| 5    | Review `logs/api_run.log` after run               | Audit what happened even if it crashes |
+
+
+| Problem                 | Fix                                    |
+| ----------------------- | -------------------------------------- |
+| Takes too long          | Add `time.sleep(0.3)` between requests |
+| Connection reset        | Retry logic in `fetch_one_page()`      |
+| Crashes on one bad page | Skip empty/failed payloads             |
+| Lose progress on crash  | Save per-country CSVs                  |
+| Unnecessary empty pages | Break loop early if page empty         |
+
+
