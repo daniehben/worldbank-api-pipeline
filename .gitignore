@@ -1,0 +1,14 @@
+# Ignore Python virtual environments
+venv/
+__pycache__/
+
+# Ignore data files
+data/*.csv
+data/*.xlsx
+
+# Ignore system files
+.DS_Store
+
+# Ignore environment and IDE files
+.env
+*.code-workspace
