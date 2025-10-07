@@ -1,32 +1,25 @@
 import requests
 import pandas as pd
 import time
-
 import logging
 from pathlib import Path
 
-# --- Logging setup ---
+# --- Directories ---
 Path("logs").mkdir(exist_ok=True)  # ensure a logs folder exists
-
-logging.basicConfig(
-    level=logging.INFO,                              # log INFO and above
-    format="%(asctime)s [%(levelname)s] %(message)s", # timestamp + level + message
-    handlers=[
-        logging.FileHandler(f"logs/{code}_fetch.log", mode="w"), # write log file
-        logging.StreamHandler()                            # also show in console
-    ]
-)
-
-logger = logging.getLogger(__name__)
+Path("data").mkdir(exist_ok=True)
 
 
-
-
+# --- Config ---
 
 BASE_URL = "https://api.worldbank.org/v2/sources/14/country/{}/series/all"
 
 country_codes = ["EGY", "MAR", "SAU", "JOR", "TUN", "IRQ", "YEM", "OMN", "QAT", "BHR", "KWT", "DZA", "LBY"]
 params = {"format": "json", "per_page": 1000}
+
+
+# ============================================================
+# Helper functions
+# ============================================================
 
 def fetch_one_page(url:str, params:dict, max_retries: int =3, delay: float = 2.0) -> dict:
     
@@ -40,16 +33,13 @@ def fetch_one_page(url:str, params:dict, max_retries: int =3, delay: float = 2.0
             r.raise_for_status() #fail if not HTTP error
             return r.json() #top level is a dict for this API
         except requests.exceptions.RequestException as e:
-            logger.warning(f"Attempt {attempt + 1} failed for {url} (page {params.get('page')}).Error: {e}")
+            logging.warning(f"Attempt {attempt + 1} failed for {url} (page {params.get('page')}).Error: {e}")
             if attempt < max_retries - 1:
                 time.sleep(delay * (attempt + 1)) #exponential backoff
             else:
-                logger.error(f"❌ Giving up on {url} page {params.get('page')}.Error: {e}")
+                logging.error(f"❌ Giving up on {url} page {params.get('page')}.Error: {e}")
                 return{}
     
-
-
-# --- Step 1C – Convert the 'variable' list into a lookup dict ---
 
 def to_lookup(var_list):
     
@@ -69,26 +59,20 @@ def to_lookup(var_list):
             lookup[concept_name] = item
     return lookup
 
-# --- Step 1D: Parse one row into a flat, tidy dictionary ---
 
 def parse_rows(row: dict) -> dict:
     
-    # 1️⃣ Use the helper from Step 1C to turn the 'variable' list into a lookup dict
-    
+    """Flatten one raw JSON row into a tidy dictionary."""
+
     var_list = row.get("variable", [])
     lk = to_lookup(var_list)
-    
-    # 2️⃣ Extract country information
     
     country_id = lk.get("Country", {}).get("id")
     country_name = lk.get("Country",{}).get("value")
      
-    # 3️⃣ Extract indicator / series information
-    
     series_id = lk.get("Series",{}).get("id")
     series_name = lk.get("Series",{}).get("value")
     
-    # 4️⃣ Extract and clean time information
     
     time_id = lk.get("Time",{}).get("id")
     year = None
@@ -99,11 +83,9 @@ def parse_rows(row: dict) -> dict:
         except ValueError:
             year = None
         
-    # 5️⃣ Extract the numeric value (can be None)
-    
     value = row.get("value")
     
-    # 6️⃣ Return one flat dictionary
+    # Return one flat dictionary
     
     return{
         "country_id": country_id,
@@ -114,29 +96,65 @@ def parse_rows(row: dict) -> dict:
         "value": value
     }
     
+# ============================================================
+# Main extraction loop
+# ============================================================
 
 all_country_dfs = []
 
 for code in country_codes:
+    # --------------------------------------------------------
+    # Set up a logger unique to this country
+    # --------------------------------------------------------
+    
+    logger = logging.getLogger(code)
+    logger.setLevel(logging.INFO)
+    
+    # file + console handlers
+    file_handler = logging.FileHandler(f"logs/{code}_fetch.log", mode="w")
+    file_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+    
+    # attach handlers
+    logger.addHandler(file_handler)
+    logger.addHandler(stream_handler)
+    
+    
+    # --------------------------------------------------------
+    # Begin fetching
+    # --------------------------------------------------------
+    
+    
     logger.info(f"Fetching All pages for {code} ...")
     params = {"format": "json", "per_page": 1000, "page": 1}
     url = BASE_URL.format(code)
-
+    
+    #NEW: hold this country's DFs here
+    dfs_this_country = [] 
+    
     payload = fetch_one_page(url, params)
+    if not payload:
+        logger.warning(f"⚠️ SKIPPING : No payload for {code} page 1.")
+        continue
     
     #NEW : how many pages exist for this country?
     total_pages = payload.get("pages",1)
-    #NEW: hold this country's DFs here
-    dfs_this_country = [] 
-
-
+    
     rows = payload.get("source", {}).get("data", [])
     parsed = [parse_rows(r) for r in rows if isinstance(r,dict)]
     df_page1 = pd.DataFrame(parsed)
     if not df_page1.empty:
         df_page1['value'] = pd.to_numeric(df_page1['value'], errors='coerce')
         dfs_this_country.append(df_page1) #Changed here to append to new list
-
+    else:
+        logger.warning(f"⚠️ SKIPPING Country : {code} page 1 is empty.")
+        continue
+    
+    # --------------------------------------------------------
+    # Remaining pages
+    # --------------------------------------------------------
+    
     for p in range(2, total_pages +1):
         params["page"] = p
         payload_p = fetch_one_page(url, params)
@@ -148,30 +166,51 @@ for code in country_codes:
         rows_p = payload.get("source", {}).get("data", [])
         parsed_p = [parse_rows(r) for r in rows_p if isinstance(r,dict)]
         df_p = pd.DataFrame(parsed_p)
+        
+        # 🟧 Stop early if page empty
         if not df_p.empty:
-            
-            #After you parse a page, check if it’s empty — if so, you can break early:
-            
             logger.info(f"ℹ️ Page {p} for {code} is empty — stopping early.")
             break
         
         df_p["value"] = pd.to_numeric(df_p["value"], errors="coerce")
         dfs_this_country.append(df_p)
         
-        time.sleep(0.2)
+        time.sleep(0.2) #polite delay
+    
+    
+    # --------------------------------------------------------
+    # Finalize this country
+    # --------------------------------------------------------
     
     #NEW: finalize one country
     if dfs_this_country: #not empty
         df_country = pd.concat(dfs_this_country, ignore_index=True)
         df_country['requested_country'] = code
         all_country_dfs.append(df_country)
+        
+        df_country.to_csv(f"data/{code}_raw.csv", index=False)
+        logger.info(f"✅ Finished {code} with {len(df_country)} rows. Saved to data/{code}_raw.csv.")
     else:
-        print(f"No data for country {code}")
+        logger.warning(f"⚠️ No data collected for {code}.")
 
 
+    # detach handlers (important to avoid duplicate logs)
+    logger.removeHandler(file_handler)
+    logger.removeHandler(stream_handler)
+    file_handler.close()
+    stream_handler.close()
 
-# Combine the first pages from all countries
-df = pd.concat(all_country_dfs, ignore_index=True) if all_country_dfs else pd.DataFrame()
+# ============================================================
+# Combine all results
+# ============================================================
+if all_country_dfs:
+    df = pd.concat(all_country_dfs, ignore_index=True)
+    df.to_csv("data/all_countries_combined.csv", index=False)
+    print(f"\n✅ Combined dataset saved → data/all_countries_combined.csv ({len(df)} rows)")
+else:
+    print("\n⚠️ No data fetched for any country.")
+    
+
 print("\nFinal Summary:")
 logger.info("Total rows:", len(df))
 if not df.empty:
