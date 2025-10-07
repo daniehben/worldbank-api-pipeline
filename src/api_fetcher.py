@@ -1,18 +1,33 @@
 import requests
 import pandas as pd
 import time
-time.sleep(0.1)
+
 
 
 BASE_URL = "https://api.worldbank.org/v2/sources/14/country/{}/series/all"
 
-country_codes = ["EGY", "MAR", "SAU", "JOR", "TUN", "IRQ", "IRN", "YEM", "OMN", "QAT", "BHR", "KWT", "ARE", "DZA", "LBY"]
+country_codes = ["EGY", "MAR", "SAU", "JOR", "TUN", "IRQ", "YEM", "OMN", "QAT", "BHR", "KWT", "DZA", "LBY"]
 params = {"format": "json", "per_page": 1000}
 
-def fetch_one_page(url:str, params:dict) -> dict:
-    r = requests.get(url, params=params, timeout=60)
-    r.raise_for_status() #fail if not HTTP error
-    return r.json() #top level is a dict for this API
+def fetch_one_page(url:str, params:dict, max_retries: int =3, delay: float = 2.0) -> dict:
+    
+    """
+    Fetch one page of results with retry logic and polite delay.
+    """
+    
+    for attempt in range(max_retries):
+        try:
+            r = requests.get(url, params=params, timeout=60)
+            r.raise_for_status() #fail if not HTTP error
+            return r.json() #top level is a dict for this API
+        except requests.exceptions.RequestException as e:
+            print(f"Attempt {attempt + 1} failed for {url} (page {params.get('page')}).Error: {e}")
+            if attempt < max_retries - 1:
+                time.sleep(delay * (attempt + 1)) #exponential backoff
+            else:
+                print("❌ Giving up on this page.")
+                return{}
+    
 
 
 # --- Step 1C – Convert the 'variable' list into a lookup dict ---
@@ -107,12 +122,24 @@ for code in country_codes:
         params["page"] = p
         payload_p = fetch_one_page(url, params)
         
+        if not payload_p:
+            print(f"⚠️ Skipping page {p} for {code} (no response).")
+            continue
+        
         rows_p = payload.get("source", {}).get("data", [])
         parsed_p = [parse_rows(r) for r in rows_p if isinstance(r,dict)]
         df_p = pd.DataFrame(parsed_p)
         if not df_p.empty:
-            df_p["value"] = pd.to_numeric(df_p["value"], errors="coerce")
-            dfs_this_country.append(df_p)
+            
+            #After you parse a page, check if it’s empty — if so, you can break early:
+            
+            print(f"ℹ️ Page {p} for {code} is empty — stopping early.")
+            break
+        
+        df_p["value"] = pd.to_numeric(df_p["value"], errors="coerce")
+        dfs_this_country.append(df_p)
+        
+        time.sleep(0.2)
     
     #NEW: finalize one country
     if dfs_this_country: #not empty
