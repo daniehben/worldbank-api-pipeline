@@ -168,7 +168,7 @@ for code in country_codes:
         df_p = pd.DataFrame(parsed_p)
         
         # 🟧 Stop early if page empty
-        if not df_p.empty:
+        if df_p.empty:
             logger.info(f"ℹ️ Page {p} for {code} is empty — stopping early.")
             break
         
