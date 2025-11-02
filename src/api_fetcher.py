@@ -88,7 +88,7 @@ session.headers.update({"User-Agent": "MENA-Tableau-Fetcher/1.0"})
 
 
 # ============================================================
-# Helper functions
+# Helper function
 # ============================================================
 
 def fetch_one_page(url:str, params:dict) -> dict | None:
@@ -105,61 +105,6 @@ def fetch_one_page(url:str, params:dict) -> dict | None:
         logging.warning(f"Fetch failed: {url} | {e}")
         return None
 
-def to_lookup(var_list):
-    
-    """
-    Turn a list of concept dictionaries into a lookup by concept name.
-    Example:
-        [{'concept':'Country',...}, {'concept':'Series',...}]
-    becomes
-        {'Country': {...}, 'Series': {...}}
-    """
-    
-    lookup = {}
-    
-    for item in var_list or []:
-        if isinstance(item,dict) and "concept" in item:
-            concept_name = item["concept"]
-            lookup[concept_name] = item
-    return lookup
-
-
-def parse_rows(row: dict) -> dict:
-    
-    """Flatten one raw JSON row into a tidy dictionary."""
-
-    var_list = row.get("variable", [])
-    lk = to_lookup(var_list)
-    
-    country_id = lk.get("Country", {}).get("id")
-    country_name = lk.get("Country",{}).get("value")
-     
-    series_id = lk.get("Series",{}).get("id")
-    series_name = lk.get("Series",{}).get("value")
-    
-    
-    time_id = lk.get("Time",{}).get("id")
-    year = None
-    
-    if isinstance(time_id,str) and time_id.startswith("YR"):
-        try:
-            year = int(time_id[2:]) # remove "YR" and convert to integer
-        except ValueError:
-            year = None
-        
-    value = row.get("value")
-    
-    # Return one flat dictionary
-    
-    return{
-        "country_id": country_id,
-        "country_name": country_name,
-        "series_id": series_id,
-        "series_name": series_name,
-        "year": year,
-        "value": value
-    }
-    
 # ============================================================
 # Main extraction loop
 # ============================================================
