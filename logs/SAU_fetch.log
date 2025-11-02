@@ -1,2 +1,4 @@
-2025-10-07 14:39:29,557 [INFO] Fetching All pages for SAU ...
-2025-10-07 14:40:11,937 [INFO] ✅ Finished SAU with 84000 rows. Saved to data/SAU_raw.csv.
+2025-10-15 13:16:26,041 [INFO] Fetching selected indicators for SAU ...
+2025-10-15 13:17:57,673 [INFO] SP.M15.2024.FE.ZS for SAU is mostly empty.
+2025-10-15 13:18:13,770 [INFO] SP.M18.2024.FE.ZS for SAU is mostly empty.
+2025-10-15 13:19:25,807 [INFO] ✅ Finished SAU: 2795 rows. Saved to data/SAU_selected.csv.

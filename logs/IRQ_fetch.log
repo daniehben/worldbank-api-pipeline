@@ -1,2 +1,21 @@
-2025-10-07 14:41:51,876 [INFO] Fetching All pages for IRQ ...
-2025-10-07 14:42:37,429 [INFO] ✅ Finished IRQ with 84000 rows. Saved to data/IRQ_raw.csv.
+2025-10-15 13:32:06,218 [INFO] Fetching selected indicators for IRQ ...
+2025-10-15 13:32:12,244 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:32:18,269 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:32:24,297 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:32:30,318 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:32:36,345 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:32:42,368 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:32:48,399 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:32:54,432 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:33:00,445 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:33:06,469 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:33:12,493 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:33:18,536 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:33:53,097 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:33:59,126 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:34:05,167 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:34:11,194 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:34:17,232 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:34:23,265 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:34:29,305 [WARNING] ⚠️ SKIPPING : No payload for IRQ page 1.
+2025-10-15 13:45:46,787 [INFO] ✅ Finished IRQ: 1690 rows. Saved to data/IRQ_selected.csv.

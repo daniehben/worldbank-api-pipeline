@@ -1,2 +1,4 @@
-2025-10-07 14:56:15,695 [INFO] Fetching All pages for KWT ...
-2025-10-07 15:00:01,963 [INFO] ✅ Finished KWT with 84000 rows. Saved to data/KWT_raw.csv.
+2025-10-15 13:49:04,732 [INFO] Fetching selected indicators for KWT ...
+2025-10-15 13:50:23,160 [INFO] SP.M15.2024.FE.ZS for KWT is mostly empty.
+2025-10-15 13:50:23,629 [INFO] SP.M18.2024.FE.ZS for KWT is mostly empty.
+2025-10-15 13:50:36,958 [INFO] ✅ Finished KWT: 2795 rows. Saved to data/KWT_selected.csv.

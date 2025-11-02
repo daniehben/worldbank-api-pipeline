@@ -16,3 +16,18 @@
 | Unnecessary empty pages | Break loop early if page empty         |
 
 
+
+Quick mental model
+
+Old: “Pull a giant catalog (all series) for a country — requires pagination, slow, sparse.”
+
+New: “Pull a short, meaningful list (selected indicators) for a country — usually one page each, fast, dense.”
+
+
+Replace the inner logic
+
+Old: country → page loop → parse payload["source"]["data"].
+
+New: country → indicator loop → read payload[1] (and optionally page 2..N with above addon).
+
+Everything else (logging, retry logic, polite sleep) stays the same.
