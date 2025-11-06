@@ -211,3 +211,33 @@ Columns:
 Country | Country Code | Year | Indicator Code | Indicator Name | Value | Unit Type | missing_rate
 ```
 
+# ♦︎ Phase 2 – SQL Phase: Database Normalization
+
+## ⦿ SQL Database Schema
+
+```mermaid
+erDiagram
+    COUNTRIES {
+        VARCHAR(10) country_id PK
+        VARCHAR(255) country_name
+    }
+
+    INDICATORS {
+        VARCHAR(50) indicator_id PK
+        VARCHAR(255) indicator_name
+        VARCHAR(50) unit_type
+    }
+
+    GENDER_DATA {
+        INT id PK
+        VARCHAR(10) country_id FK
+        VARCHAR(50) indicator_id FK
+        INT year
+        FLOAT value
+    }
+
+    COUNTRIES ||--o{ GENDER_DATA : "has data for"
+    INDICATORS ||--o{ GENDER_DATA : "measures"
+```
+
+
