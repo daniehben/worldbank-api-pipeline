@@ -1,4 +1,11 @@
-SELECT COUNT(*) FROM gender_data;
-SELECT * FROM gender_data LIMIT 10;
-SELECT COUNT(DISTINCT country_name), COUNT(DISTINCT indicator_name) FROM gender_data;
+USE mena_gender_db;
 
+
+SELECT COUNT(*) AS total_rows FROM gender_data_raw;
+SELECT COUNT(DISTINCT country_id) AS countries,
+       COUNT(DISTINCT indicator_id) AS indicators,
+       COUNT(DISTINCT year) AS years
+FROM gender_data_raw;
+
+
+SELECT * FROM gender_data_raw LIMIT 10;

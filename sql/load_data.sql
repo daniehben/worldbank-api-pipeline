@@ -1,8 +1,8 @@
 SET GLOBAL local_infile = 1;
-USE mena_gender_sql;
+USE mena_gender_db;
 
 LOAD DATA LOCAL INFILE '/Users/daniehbenotman/Desktop/worldbank_tableau_project/data/All_countries_cleaned.csv'
-INTO TABLE gender_data
+INTO TABLE gender_data_raw
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
