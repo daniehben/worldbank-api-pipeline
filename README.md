@@ -240,4 +240,46 @@ erDiagram
     INDICATORS ||--o{ GENDER_DATA : "measures"
 ```
 
+# ♦︎ Phase 3 - Pre Tableau Prep 
+
+## ⦿ Indicator Categorization Framework
+To support clearer analysis, SQL joins, and Tableau filtering, all 45 indicators were grouped into 8 thematic categories.
+This improves dashboard clarity, storytelling, and data modeling.
+
+| **Category Code** | **Category Name**                 | **Description**                                                   | **Examples of Indicators**                                  |
+| ----------------- | --------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------- |
+| **C1**            | Gender Rights & Legal Empowerment | Measures women’s legal autonomy, protections, and civil rights.   | “A woman can…” rights, sexual harassment laws               |
+| **C2**            | Political Representation          | Women’s participation in leadership and national decision-making. | Women in parliament, ministerial positions                  |
+| **C3**            | Demographic & Life Expectancy     | Core demographic trends and population health.                    | Birth rate, adolescent fertility, life expectancy           |
+| **C4**            | Health & Mortality                | Gender-related health outcomes and vulnerabilities.               | Maternal mortality, male/female HIV prevalence              |
+| **C5**            | Education & Literacy              | Educational attainment, literacy, parity in schooling.            | Literacy rates, secondary GPI, upper secondary completion   |
+| **C6**            | Labor Force & Employment          | Women’s and men’s participation in economic activity.             | Labor force rate, unemployment rate, employment in services |
+| **C7**            | Economic Conditions               | Macro-economic indicators shaping gender outcomes.                | GDP per capita, inflation                                   |
+| **C8**            | Composite Gender Index            | Multi-dimensional gender equality scoring.                        | Women, Business & the Law Index                             |
+
+
+## ⦿ Regional Grouping
+Before connecting the cleaned dataset to Tableau, a regional grouping was created to organize MENA countries into meaningful subregions.
+This grouping enables more coherent regional comparisons and visual storytelling within the dashboard.
+
+| **Country**      | **Assigned Region**            | 
+| ---------------- | ------------------------------ |
+| Bahrain          | GCC (Gulf Cooperation Council) |
+| Kuwait           | GCC                            |                                                                    
+| Oman             | GCC                            |                                                                    
+| Qatar            | GCC                            |                                                                    
+| Saudi Arabia     | GCC                            |                                                                    
+| Egypt, Arab Rep. | North Africa                   |                                                                    
+| Libya            | North Africa                   |                                                                    
+| Tunisia          | North Africa                   |                                                                    
+| Algeria          | North Africa                   |                                                                    
+| Morocco          | North Africa                   |                                                                    
+| Jordan           | Levant                         |                                                                    
+| Iraq             | Other                          | 
+| Yemen, Rep.      | Other                          |
+
+
+###### Note:
+Iraq and Yemen were classified as “Other” because they do not fully align with the political or geographic boundaries of the GCC, Levant, or North African subregions.
+
 
