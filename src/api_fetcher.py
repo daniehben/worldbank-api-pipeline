@@ -16,7 +16,7 @@ Path("data").mkdir(exist_ok=True)
 # --- Config ---
 
 BASE_URL = "https://api.worldbank.org/v2/country/{countries}/indicator/{indicator}"
-country_codes = ["EGY", "MAR", "SAU", "JOR", "TUN", "IRQ", "YEM", "OMN", "QAT", "BHR", "KWT", "DZA", "LBY"]
+country_codes = ["EGY", "MAR", "SAU", "JOR", "TUN", "IRQ", "YEM", "OMN", "QAT", "BHR", "KWT", "DZA", "LBY","ARE","IRN","SYR","LBN","PSE"]
 countries_str = ";".join(country_codes)
 
 selected_indicators ={
@@ -28,29 +28,24 @@ selected_indicators ={
     "SE.SEC.CUAT.UP.FE.ZS":"Educational attainment, at least completed upper secondary, population 25+, female (%) (cumulative)",
     "SG.NGT.WORK.EQ":"A woman can work at night in the same way as a man (1=yes; 0=no)",
     "SG.OBT.DVRC.EQ":"A woman can obtain a judgment of divorce in the same way as a man (1=yes; 0=no)",
-    "SL.SRV.EMPL.MA.ZS":"Employment in services, male (% of male employment) (modeled ILO estimate)",
     "SG.IND.WORK.EQ":"A woman can work in an industrial job in the same way as a man (1=yes; 0=no)",
     "SP.DYN.CBRT.IN":"Birth rate, crude (per 1,000 people)",
     "FP.CPI.TOTL.ZG":"Inflation, consumer prices (annual %)",
     "SL.UEM.TOTL.MA.ZS":"Unemployment, male (% of male labor force) (modeled ILO estimate)",
-    "SL.TLF.CACT.FE.ZS":"Labor force participation rate, female (% of female population ages 15+) (modeled ILO estimate)",
     "NY.GDP.PCAP.CD":"GDP per capita (current US$)",
     "SE.ADT.LITR.MA.ZS":"Literacy rate, adult male (% of males ages 15 and above)",
     "SP.DYN.LE00.MA.IN":"Life expectancy at birth, male (years)",
     "SG.CNT.SIGN.EQ":"A woman can sign a contract in the same way as a man (1=yes; 0=no)",
-    "SH.HIV.1524.MA.ZS":"Prevalence of HIV, male (% ages 15-24)",
     "SG.DNG.WORK.DN.EQ":"A woman can work in a job deemed dangerous in the same way as a man (1=yes; 0=no)",
     "SG.OPN.BANK.EQ":"A woman can open a bank account in the same way as a man (1=yes; 0=no)",
     "SG.CTR.TRVL.EQ":"A woman can travel outside the country in the same way as a man (1=yes; 0=no)",
     "SG.HME.TRVL.EQ":"A woman can travel outside her home in the same way as a man (1=yes; 0=no)",
-    "SL.SRV.EMPL.FE.ZS":"Employment in services, female (% of female employment) (modeled ILO estimate)",
     "SP.ADO.TFRT":"Adolescent fertility rate (births per 1,000 women ages 15-19)",
     "SE.ADT.LITR.ZS":"Literacy rate, adult total (% of people ages 15 and above)",
     "SE.SEC.CUAT.UP.MA.ZS":"Educational attainment, at least completed upper secondary, population 25+, male (%) (cumulative)",
     "SL.UEM.TOTL.FE.ZS":"Unemployment, female (% of female labor force) (modeled ILO estimate)",
     "SG.GET.JOBS.EQ":"A woman can get a job in the same way as a man (1=yes; 0=no)",
     "SG.BUS.REGT.EQ":"A woman can register a business in the same way as a man (1=yes; 0=no)",
-    "SH.HIV.1524.FE.ZS":"Prevalence of HIV, female (% ages 15-24)",
     "SE.ADT.1524.LT.MA.ZS":"Literacy rate, youth male (% of males ages 15-24)",
     "SG.HLD.HEAD.EQ":'A woman can be "head of household" in the same way as a man (1=yes; 0=no)',
     "SG.PEN.SXHR.EM":"Criminal penalties or civil remedies exist for sexual harassment in employment (1=yes; 0=no)",
@@ -58,13 +53,31 @@ selected_indicators ={
     "SG.GEN.MNST.ZS":"Proportion of women in ministerial level positions (%)",
     "SP.DYN.LE00.FE.IN":"Life expectancy at birth, female (years)",
     "SE.ADT.LITR.FE.ZS":"Literacy rate, adult female (% of females ages 15 and above)",
-    "SL.TLF.CACT.MA.ZS":"Labor force participation rate, male (% of male population ages 15+) (modeled ILO estimate)",
     "SG.GEN.PARL.ZS":"Proportion of seats held by women in national parliaments (%)",
     "SE.ENR.SECO.FM.ZS":"School enrollment, secondary (gross), gender parity index (GPI)",
     "SP.M15.2024.FE.ZS":"Women who were first married by age 15 (% of women ages 20-24)",
     "SP.M18.2024.FE.ZS":"Women who were first married by age 18 (% of women ages 20-24)",
     "SP.DYN.CONU.ZS":"Contraceptive prevalence, any method (% of married women ages 15-49)",
-    "SP.DYN.CONM.ZS":"Contraceptive prevalence, any modern method (% of married women ages 15-49)"
+    "SP.DYN.CONM.ZS":"Contraceptive prevalence, any modern method (% of married women ages 15-49)",
+    'HD.HCI.OVRL.MA':'Human capital index (HCI), male (scale 0-1)',
+    'SG.LAW.INDX.MR': 'Women, Business and the Law: Marriage Indicator Score (scale 1-100)',
+    'SG.LAW.INDX.MO':'Women, Business and the Law: Mobility Indicator Score (scale 1-100)',
+    'SG.LAW.INDX.PR':'Women, Business and the Law: Parenthood Indicator Score (scale 1-100)',
+    'SG.LAW.INDX.PY':'Women, Business and the Law: Pay Indicator Score (scale 1-100)',
+    'SG.LAW.INDX.PE':'Women, Business and the Law: Pension Indicator Score (scale 1-100)',
+    "SL.EMP.VULN.FE.ZS":"Vulnerable employment, female (% of female employment) (modeled ILO estimate)",
+    "HD.HCI.OVRL.FE":"Human capital index (HCI), female (scale 0-1)",
+    "SG.LAW.INDX.WP":"Women, Business and the Law: Workplace Indicator Score (scale 1-100)",
+    "SI.POV.GINI":"Gini index",
+    "SP.POP.TOTL":"Population, total",
+    "SL.EMP.VULN.MA.ZS":"Vulnerable employment, male (% of male employment) (modeled ILO estimate)",
+    "SG.LAW.INDX.AS":"Women, Business and the Law: Assets Indicator Score (scale 1-100)",
+    "SG.LAW.INDX.EN":"Women, Business and the Law: Entrepreneurship Indicator Score (scale 1-100)",
+    "HD.HCI.OVRL":"Human capital index (HCI) (scale 0-1)",
+    "SP.DYN.CDRT.IN":"Death rate, crude (per 1,000 people)",
+    "SL.EMP.TOTL.SP.MA.ZS":"Employment to population ratio, 15+, male (%) (modeled ILO estimate)",
+    "SL.EMP.TOTL.SP.FE.ZS":"Employment to population ratio, 15+, female (%) (modeled ILO estimate)",
+
     
 }
 
@@ -170,8 +183,8 @@ if __name__ == "__main__":
             
                 if pages:
                     df_indicator = pd.concat(pages, ignore_index=True)
-                    df_indicator.to_csv(f"data/IND_{ind_code}.csv", index=False)
-                    logger.info(f"Saved {ind_code} ({len(df_indicator)} rows)")
+                    #df_indicator.to_csv(f"data/IND_{ind_code}.csv", index=False)
+                    #logger.info(f"Saved {ind_code} ({len(df_indicator)} rows)")
                     all_indicators_df.append(df_indicator)
                 else:
                     logger.warning(f"⚠️ No data fetched for {ind_code}")
@@ -182,15 +195,15 @@ if __name__ == "__main__":
         if all_indicators_df:
             df_all = pd.concat(all_indicators_df, ignore_index=True)
             df_all = add_unit_types(df_all, column="indicator_name")
-            df_all.to_csv("data/all_countries_selected.csv", index=False)
+            df_all.to_csv("data/updated_countries.csv", index=False)
             
             # Optional per-country files for Tableau
-            for code in country_codes:
-                df_c = df_all[df_all["country_id"] == code]
-                if not df_c.empty:
-                    df_c.to_csv(f"data/{code}_selected.csv", index=False)
+           # for code in country_codes:
+              #  df_c = df_all[df_all["country_id"] == code]
+               # if not df_c.empty:
+                   # df_c.to_csv(f"data/{code}_selected.csv", index=False)
             
-            logger.info(f"Finished! Combined dataset saved → data/all_countries_selected.csv")
+            logger.info(f"Finished! Combined dataset saved → data/updated_countries.csv")
         else:
             logger.warning("\n⚠️ No data fetched for any indicator.")
         
