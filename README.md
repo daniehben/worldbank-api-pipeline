@@ -99,19 +99,35 @@ _________________
 
 # ♦︎ Phase 1 – API Fetching & Data Cleaning (Python)
 
-## 🌐  Countries Covered
 
-Egypt, Morocco, Saudi Arabia, Jordan, Tunisia, Iraq, Yemen, Oman, Qatar, Bahrain, Kuwait, Algeria, Libya
+This phase covers the automated extraction, refinement, and preprocessing of gender, education, demographic, and economic indicators from the World Bank API and supplementary UNESCO data. As the analytical direction of the project became clearer, the indicator list, country coverage, and data scope were expanded to support a richer and more complete narrative across the MENA region.
 
-## 📊  Indicators
+## Indicator Refinement and Expansion
 
-45+ gender, economic, and social indicators (e.g., literacy rates, employment, WBL Index, life expectancy, etc.).
-Each indicator includes metadata such as Indicator Code, Indicator Name, Country, Year, and Value.
+Several indicators originally included were removed due to limited analytical value or static, non-informative values. Examples include HIV prevalence indicators and certain labor-force metrics that showed little to no variation across countries and years. In their place, more relevant and story-aligned indicators were added, including:
+
+• Full Women, Business & the Law (WBL) component indices
+• Human Capital Index (HCI) indicators
+• Gini coefficient
+• Population and demographic measures
+• Employment-to-population ratios (replacing weaker labor-force metrics)
+
+Country coverage was expanded from 13 to 18 countries to fully represent the MENA region. All new indicators and countries were incorporated into the API-fetching module, and an updated master dataset was generated reflecting this expanded scope.
+
+## 🌐 Countries Covered
+
+Algeria, Bahrain, Egypt, Iraq, Jordan, Kuwait, Lebanon, Libya, Morocco, Oman, Qatar, Saudi Arabia, Syria, Tunisia, United Arab Emirates, Yemen, Palestine, Iran
+
+
+
+## 📊 Indicators
+
+The dataset now includes 45+ gender, social, economic, legal, and demographic indicators such as literacy rates, WBL Index scores, HCI components, Gini inequality measures, employment ratios, and life expectancy. All indicators include standardised metadata fields: Indicator Code, Indicator Name, Country, Year, and Value.
 
 
 ## ⦿ Step 1: API Fetching (src/api_fetcher.py)
 #### Purpose
-Automates fetching of World Bank data and exports a unified dataset for all selected indicators and countries.
+Automates the fetching of World Bank data and exports a unified dataset for all selected indicators and countries.
 
 #### Main Features
 
@@ -168,7 +184,63 @@ Uses rule-based text detection to classify units such as:
 | Birth rate, crude (per 1,000 people)   | Rate per 1,000 |
 
 
-## ⦿ Step 3: Data Cleaning & Validation (notebooks/dataCleaning.ipynb)
+# ♦︎ Phase 2 –  External Data Integration (UNESCO Education & Literacy Data)
+
+## Purpose
+
+To compensate for the high missingness in World Bank education and literacy indicators, an additional dataset from the UNESCO Institute for Statistics was integrated into the project. The goal was to enrich the literacy and schooling dimension of the dashboard and ensure more complete time-series coverage across the full MENA region.
+
+## Data Source
+
+UNESCO Institute for Statistics (UIS)
+Downloaded as: UNESCO.csv
+
+## Scope of UNESCO Indicators
+
+The imported dataset includes key education and literacy metrics such as:
+- Educational attainment rate, completed upper secondary education or higher, population 25+ years, female (%)
+- Educational attainment rate, completed upper secondary education or higher, population 25+ years, male (%)
+- Youth literacy rate, population 15-24 years, female (%)
+- Youth literacy rate, population 15-24 years, male (%)
+- Literacy rate, population 25-64 years, female (%)
+- Literacy rate, population 25-64 years, male (%)
+
+These metrics complement and extend the World Bank’s Education & Literacy category by filling structural gaps in the region.
+
+## Processing Steps (Technical)
+
+### Raw CSV Acquisition and Manual Pre-Filtering
+
+The full dataset was downloaded directly from the UNESCO online portal.
+
+Using Excel, the raw CSV was manually cleaned to retain only relevant fields:
+year, indicator_id, indicator_name, country_id, country_name, value
+
+Indicators were mapped to their codes using VLOOKUP to ensure consistency with project metadata conventions.
+
+Country names were normalized manually to match the World Bank naming scheme (e.g., “Egypt” → “Egypt, Arab Rep.”).
+
+### Notebook Import and Standardization (notebooks/data_merge.ipynb)
+Two dataframes were created for each dataset. Both were brought into a unified environment to ensure structural alignment. To ensure clean merging with no issues, both datasets were standardised. In addition, the UNESCO indicators were passed through the unit type inference system. This allowed UNESCO indicators to be seamlessly integrated into downstream EDA, modeling, and Tableau visualization.
+
+### Data Merge Into Unified Long-Format Dataset
+
+The two datasets were concatenated into a single long-format dataframe:
+combined = pd.concat([wb, unesco], ignore_index=True)
+
+This merged dataset now contains:
+• Updated World Bank indicators (expanded to 18 MENA countries)
+• Supplementary UNESCO education/literacy indicators
+• Harmonized country names
+• Consistent indicator IDs and unit types
+
+The final merged output was saved as:
+data/merged_data.csv
+
+This file now serves as the new master input for the Phase 3 cleaning workflow.
+
+
+# ♦︎ Phase 3: Data Cleaning & Validation (notebooks/dataCleaning.ipynb)
 #### Purpose
 
 Ensure completeness, accuracy, and readiness of fetched data for analysis.
@@ -211,34 +283,6 @@ Columns:
 Country | Country Code | Year | Indicator Code | Indicator Name | Value | Unit Type | missing_rate
 ```
 
-# ♦︎ Phase 2 – SQL Phase: Database Normalization
-
-## ⦿ SQL Database Schema
-
-```mermaid
-erDiagram
-    COUNTRIES {
-        VARCHAR(10) country_id PK
-        VARCHAR(255) country_name
-    }
-
-    INDICATORS {
-        VARCHAR(50) indicator_id PK
-        VARCHAR(255) indicator_name
-        VARCHAR(50) unit_type
-    }
-
-    GENDER_DATA {
-        INT id PK
-        VARCHAR(10) country_id FK
-        VARCHAR(50) indicator_id FK
-        INT year
-        FLOAT value
-    }
-
-    COUNTRIES ||--o{ GENDER_DATA : "has data for"
-    INDICATORS ||--o{ GENDER_DATA : "measures"
-```
 
 # ♦︎ Phase 3 - Pre Tableau Prep 
 
@@ -281,5 +325,6 @@ This grouping enables more coherent regional comparisons and visual storytelling
 
 ###### Note:
 Iraq and Yemen were classified as “Other” because they do not fully align with the political or geographic boundaries of the GCC, Levant, or North African subregions.
+
 
 
