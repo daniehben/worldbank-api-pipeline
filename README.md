@@ -416,47 +416,123 @@ This dataset:
 
 
 
-# ♦︎ Phase 4 - Pre Tableau Prep 
+# ♦︎ Phase 4 – Feature Engineering Preparation (ML Dataset Construction)
 
-## ⦿ Indicator Categorization Framework
-To support clearer analysis, SQL joins, and Tableau filtering, all 45 indicators were grouped into 8 thematic categories.
-This improves dashboard clarity, storytelling, and data modeling.
+After completing the full data-cleaning workflow, an additional preparation stage was carried out to ensure the dataset was fully ready for machine-learning analysis. This involved semantic enrichment, feature reduction, and final null-resolution, transforming the cleaned long-format dataset into a robust ML-ready resource.
 
-| **Category Code** | **Category Name**                 | **Description**                                                   | **Examples of Indicators**                                  |
-| ----------------- | --------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------- |
-| **C1**            | Gender Rights & Legal Empowerment | Measures women’s legal autonomy, protections, and civil rights.   | “A woman can…” rights, sexual harassment laws               |
-| **C2**            | Political Representation          | Women’s participation in leadership and national decision-making. | Women in parliament, ministerial positions                  |
-| **C3**            | Demographic & Life Expectancy     | Core demographic trends and population health.                    | Birth rate, adolescent fertility, life expectancy           |
-| **C4**            | Health & Mortality                | Gender-related health outcomes and vulnerabilities.               | Maternal mortality, male/female HIV prevalence              |
-| **C5**            | Education & Literacy              | Educational attainment, literacy, parity in schooling.            | Literacy rates, secondary GPI, upper secondary completion   |
-| **C6**            | Labor Force & Employment          | Women’s and men’s participation in economic activity.             | Labor force rate, unemployment rate, employment in services |
-| **C7**            | Economic Conditions               | Macro-economic indicators shaping gender outcomes.                | GDP per capita, inflation                                   |
-| **C8**            | Composite Gender Index            | Multi-dimensional gender equality scoring.                        | Women, Business & the Law Index                             |
+This phase produced ml_df, a dataset with 0 missing values, consistent time-series formatting, and enhanced contextual metadata.
 
+## 1. Semantic Enrichment: Adding Region & Category Columns
 
-## ⦿ Regional Grouping
-Before connecting the cleaned dataset to Tableau, a regional grouping was created to organize MENA countries into meaningful subregions.
-This grouping enables more coherent regional comparisons and visual storytelling within the dashboard.
+To support downstream modeling, two high-level contextual variables were added:
 
-| **Country**      | **Assigned Region**            | 
-| ---------------- | ------------------------------ |
-| Bahrain          | GCC (Gulf Cooperation Council) |
-| Kuwait           | GCC                            |                                                                    
-| Oman             | GCC                            |                                                                    
-| Qatar            | GCC                            |                                                                    
-| Saudi Arabia     | GCC                            |                                                                    
-| Egypt, Arab Rep. | North Africa                   |                                                                    
-| Libya            | North Africa                   |                                                                    
-| Tunisia          | North Africa                   |                                                                    
-| Algeria          | North Africa                   |                                                                    
-| Morocco          | North Africa                   |                                                                    
-| Jordan           | Levant                         |                                                                    
-| Iraq             | Other                          | 
-| Yemen, Rep.      | Other                          |
+### 1.1 Region Mapping
 
+Each country was assigned to one of the following regions:
 
+- GCC
+
+- Levant
+
+- North Africa
+
+Other (Iran, Yemen, Iraq)
 ###### Note:
-Iraq and Yemen were classified as “Other” because they do not fully align with the political or geographic boundaries of the GCC, Levant, or North African subregions.
+Iraq, Iran and Yemen were classified as “Other” because they do not fully align with the political or geographic boundaries of the GCC, Levant, or North African subregions.
+
+##### Why this matters:
+Many indicators show strong regional clustering (e.g., political representation, literacy, economic indicators). Region labels allow:
+
+- region-level aggregations
+
+- improved imputation
+
+- more meaningful feature engineering
+
+- potential geo-sensitive ML performance
+
+  
+### 1.2 Indicator Category Mapping
+
+Every indicator was assigned to a broader category (Education, Health, Economic Participation, Legal Rights, Demographics, etc.).
+
+##### Why this matters:
+
+- Helps group indicators logically during feature engineering
+
+- Improves interpretability in ML models
+
+- Allows category-specific transformations (e.g., volatility expectations differ for economic vs. legal indicators)
+
+
+## 2. Feature Reduction: Dropping Structurally Incomplete Indicators
+
+Certain indicators—especially the Human Capital Index (HCI) series—contained extremely high missingness (80–100%) across nearly all countries. These were not missing at random but due to structural non-reporting.
+
+
+Why HCI was removed:
+
+- Published only from 2018 onward
+
+- Many conflict states have 0 valid observations
+
+- Long missing blocks prevent meaningful interpolation
+
+- Would add noise, not information, to ML models
+
+➡️ HCI indicators were removed from the ML dataset but retained for the dashboard to illustrate coverage gaps.
+
+This reduction significantly improved the consistency and usability of the ML dataset.
+
+
+## 3. Null Resolution in Two Stages
+
+After filtering structurally unusable indicators, the dataset still contained a small number of nulls. These were resolved using a two-phase targeted imputation strategy.
+
+### Phase 1 — Time-Series Interpolation
+
+Indicators were grouped by indicator_name, country_name, and year, and interpolated according to their missingness class:
+
+- Moderate → short-gap interpolation
+
+- Small Gap → minimal interpolation (ffill/bfill only)
+
+This reduced nulls from 166 → 105.
+
+
+### Phase 2 — Regional Mean Imputation
+
+The remaining missing values belonged to a small set of indicators where:
+
+- interpolation was mathematically inappropriate
+
+- missingness followed regional patterns
+
+- regional socio-economic similarity justified region-based imputation
+
+Imputation logic:
+
+1. Compute regional year-wise mean for the indicator
+
+2. Fill missing values using this regional anchor
+
+3. Apply nearest-year fallback only when strictly needed
+
+This is statistically safer than global means and preserves geopolitical structure.
+
+Result:
+➡️ All remaining nulls were resolved (0 missing values total).
+
+
+## Summary of Phase 4 Improvements
+
+| Step                                | Purpose                       | Impact                                           |
+| ----------------------------------- | ----------------------------- | ------------------------------------------------ |
+| Added region & category metadata    | Enhance context               | Better feature engineering & ML interpretability |
+| Removed incomplete indicators (HCI) | Prevent noise & bias          | Clean, reliable ML dataset                       |
+| Time-series interpolation           | Repair natural gaps           | Smooth and realistic trends                      |
+| Regional mean imputation            | Fix non-interpolatable values | 100% completeness without distortion             |
+| Validation                          | Ensure readiness              | `ml_df` fully prepared for ML modeling           |
 
 
 
