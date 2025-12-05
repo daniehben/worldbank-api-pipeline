@@ -535,5 +535,64 @@ Result:
 | Validation                          | Ensure readiness              | `ml_df` fully prepared for ML modeling           |
 
 
+# ♦︎ Phase 5 – Feature Engineering 
+
+The goal was to convert raw indicator values into a set of temporal, structural, and contextual features that allow machine learning models to detect patterns, predict risk, and classify countries based on gender-related development behavior.
+
+### 1. Temporal Dynamics
+
+| Feature           | Purpose                      | ML Value                                               |
+| ----------------- | ---------------------------- | ------------------------------------------------------ |
+| **YoY Change**    | Captures short-term movement | Early detection of policy shifts and emerging patterns |
+| **YoY % Change**  | Normalizes rate of change    | Enables ML to compare indicators with different scales |
+| **Rolling Means** | Smooth long-term signal      | Improves model stability and reduces noise             |
+| **Rolling STD**   | Measures volatility          | Predicts instability and susceptibility to shocks      |
+| **CAGR**          | Multi-year growth rate       | Summarizes long-term direction for classifiers         |
+
+
+### 2. Shock & Event Features
+
+| Feature      | Meaning                   | ML Role                                            |
+| ------------ | ------------------------- | -------------------------------------------------- |
+| **Spikes**   | Sudden increases (> 2 SD) | Detects policy breakthroughs or sharp improvements |
+| **Dips**     | Sudden drops (< -2 SD)    | Detects crisis years (war, unrest, recession)      |
+| **Outliers** | Extreme values (IQR)      | Enhances robustness by controlling for noise       |
+
+These features are crucial for studying how gender indicators respond to political, economic, or social shocks across the MENA region.
+
+
+### 3. Trend & Stability Features
+
+| Feature                      | Description                                 | ML Contribution                                    |
+| ---------------------------- | ------------------------------------------- | -------------------------------------------------- |
+| **Trend Slope**              | Linear regression slope of indicator values | Captures long-term direction (improving/declining) |
+| **Coefficient of Variation** | Normalized volatility                       | Differentiates stable vs. unstable countries       |
+| **Momentum**                 | Acceleration of change                      | Detects turning points, nonlinear transitions      |
+
+
+### 4. Contextual Features
+
+| Feature                | Purpose                        | ML Role                                              |
+| ---------------------- | ------------------------------ | ---------------------------------------------------- |
+| **Regional Deviation** | Distance from regional average | Controls for shared shocks (Arab Spring, oil crisis) |
+
+By adding region and category columns before feature creation, each feature is embedded in geopolitical and thematic context.
+
+
+### Conclusion
+
+The engineered dataset now contains rich temporal signatures, event reaction patterns, and context-sensitive indicators, making it suitable for:
+
+- Clustering countries by developmental trajectories
+
+- Classification of high-risk countries
+
+- Anomaly detection for crisis years
+
+- Dimensionality reduction (PCA/UMAP) for pattern visualization
+
+- Explainable AI (SHAP, LIME) to interpret drivers of gender inequality
+
+
 
 
