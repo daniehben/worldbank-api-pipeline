@@ -12,3 +12,18 @@ data/*.xlsx
 # Ignore environment and IDE files
 .env
 *.code-workspace
+
+# Large output folders
+outputs/
+outputs_event_overlay/
+event_overlay/
+country_reports/
+*.png
+*.pdf
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
