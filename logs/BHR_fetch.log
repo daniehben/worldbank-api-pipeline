@@ -1,4 +1,0 @@
-2025-10-15 13:48:22,686 [INFO] Fetching selected indicators for BHR ...
-2025-10-15 13:49:02,547 [INFO] SP.M15.2024.FE.ZS for BHR is mostly empty.
-2025-10-15 13:49:03,135 [INFO] SP.M18.2024.FE.ZS for BHR is mostly empty.
-2025-10-15 13:49:04,731 [INFO] ✅ Finished BHR: 2795 rows. Saved to data/BHR_selected.csv.

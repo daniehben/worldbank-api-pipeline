@@ -1,4 +1,0 @@
-2025-10-15 13:51:51,455 [INFO] Fetching selected indicators for LBY ...
-2025-10-15 13:52:39,985 [INFO] SP.M15.2024.FE.ZS for LBY is mostly empty.
-2025-10-15 13:52:40,615 [INFO] SP.M18.2024.FE.ZS for LBY is mostly empty.
-2025-10-15 13:52:42,245 [INFO] ✅ Finished LBY: 2795 rows. Saved to data/LBY_selected.csv.
