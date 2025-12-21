@@ -62,7 +62,16 @@ Coverage:
 │   ├── phase_07_trajectory_clustering.md
 │   ├── phase_08_indicator_behavior.md
 │   ├── phase_09_event_analysis.md
-│   └── cross_model_integration.md
+│   ├── phase_10.1_pre_classification_prep.md
+│   ├── phase_10.2_classification_problem.md
+│   ├── phase_10.3_classification.md
+│   ├── phase_10.4_SHAP_explainability.md
+│   ├── phase_10.5_SHAP_temporal_robustness.md
+│   ├── phase_10.6_SHAP_seed_robustness.md
+│   ├── phase_10.7_SHAP_capacity_robustness.md
+│   ├── phase_10.3_classification.md
+│   ├── phase_10.4_SHAP_explainability.md
+│   ├── phase_11_cross_model_synthesis.md
 │
 ├── outputs/
 │   ├── figures/              # Plots and visual summaries
@@ -158,6 +167,7 @@ See: `/analysis/data_coverage_sensitivity.md`
 
 ## ⦿ License
 This project is intended for educational and research purposes.
+
 
 
 
