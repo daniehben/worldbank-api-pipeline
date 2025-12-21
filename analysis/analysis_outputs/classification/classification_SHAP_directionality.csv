@@ -1,0 +1,10 @@
+country,feature,direction
+Lebanon,cat_Demographics_cagr,protective
+Lebanon,cat_LegalAutonomy_coef_variation,risk_increasing
+Lebanon,regional_deviation_std_mean,risk_increasing
+Morocco,cat_LegalAutonomy_coef_variation,risk_increasing
+Morocco,cat_Economy_trend_slope,risk_increasing
+Morocco,coef_variation_mean,risk_increasing
+West Bank and Gaza,cat_Demographics_cagr,protective
+West Bank and Gaza,cat_LegalAutonomy_coef_variation,risk_increasing
+West Bank and Gaza,coef_variation_mean,risk_increasing

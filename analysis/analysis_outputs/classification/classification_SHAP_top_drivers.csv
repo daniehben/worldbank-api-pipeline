@@ -1,0 +1,4 @@
+country,driver_1,driver_2,driver_3
+Lebanon,cat_Demographics_cagr,cat_LegalAutonomy_coef_variation,regional_deviation_std_mean
+Morocco,cat_LegalAutonomy_coef_variation,cat_Economy_trend_slope,coef_variation_mean
+West Bank and Gaza,cat_Demographics_cagr,cat_LegalAutonomy_coef_variation,coef_variation_mean

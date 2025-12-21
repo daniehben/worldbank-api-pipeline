@@ -1,0 +1,19 @@
+country,risk_tier
+Algeria,T0_reference
+Bahrain,T0_reference
+"Egypt, Arab Rep.",T0_reference
+"Iran, Islamic Rep.",T0_reference
+Iraq,T0_reference
+Jordan,T0_reference
+Kuwait,T0_reference
+Lebanon,T3_strong
+Libya,T0_reference
+Morocco,T3_strong
+Oman,T0_reference
+Qatar,T0_reference
+Saudi Arabia,T0_reference
+Syrian Arab Republic,T0_reference
+Tunisia,T0_reference
+United Arab Emirates,T0_reference
+West Bank and Gaza,T3_strong
+"Yemen, Rep.",T0_reference

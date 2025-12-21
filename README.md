@@ -144,6 +144,11 @@ All methodological decisions, assumptions, and analytical interpretations are do
 
 ---
 
+## ⚠️ **Data Coverage Sensitivity**
+All analytical results should be interpreted in light of reporting reliability and statistical capacity.
+See: `/analysis/data_coverage_sensitivity.md`
+
+
 ## ⦿ Scope & Notes
 - This project prioritizes **research-grade analysis** and interpretability.
 - Interactive dashboards are optional; all findings are supported by static, reproducible outputs.
