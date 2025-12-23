@@ -88,8 +88,10 @@ Coverage:
 │   ├── country_reports/
 │   ├── cross_models/
 │   ├── csv_files/              
-│   └── md_files/      
-│
+│   └── md_files/
+│   
+├── paper/             
+│     
 └── README.md
 ```
 
@@ -179,6 +181,7 @@ See: `/analysis/data_coverage_sensitivity.md`
 
 ## ⦿ License
 This project is intended for educational and research purposes.
+
 
 
 
