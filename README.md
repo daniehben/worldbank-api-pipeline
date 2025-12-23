@@ -34,8 +34,17 @@ Coverage:
 ```
 .
 ├── src/
-│   ├── api_fetcher.py        # World Bank API data retrieval
-│   ├── unit_types.py         # Unit type inference & metadata logic
+│   ├── api_fetcher.py        
+│   ├── unit_types.py
+│   
+│ 
+├── analysis/
+│   ├── analysis_outputs/             
+│   ├── methodological_caveats/
+│   ├── synthesis/
+│                  
+│   
+├── country_reports/       
 │
 ├── notebooks/
 │   ├── anomaly.ipynb
@@ -74,9 +83,12 @@ Coverage:
 │   ├── phase_11_cross_model_synthesis.md
 │
 ├── outputs/
-│   ├── figures/              # Plots and visual summaries
-│   ├── tables/               # Aggregated tables & matrices
-│   └── country_reports/      # Country-level PDF reports
+│   ├── charts/             
+│   ├── country_narratives/
+│   ├── country_reports/
+│   ├── cross_models/
+│   ├── csv_files/              
+│   └── md_files/      
 │
 └── README.md
 ```
@@ -167,6 +179,7 @@ See: `/analysis/data_coverage_sensitivity.md`
 
 ## ⦿ License
 This project is intended for educational and research purposes.
+
 
 
 
