@@ -7,6 +7,20 @@ This project is an end-to-end analytical pipeline that examines gender-related d
 
 Rather than focusing solely on point-in-time comparisons, the project emphasizes **trajectories, volatility, shock sensitivity, and structural differences** across countries and indicators.
 
+## ⦿ Research Paper (Project Synthesis)
+
+This project culminates in a thesis-level analytical paper that synthesizes all modeling, event analysis, and data coverage findings into a single narrative framework.
+
+📄 **Gender Outcomes, Instability, and Data Visibility in the MENA Region**  
+→ `/paper/gender_outcomes_data_visibility_mena.pdf`
+
+The paper addresses the central question of this project:
+
+> *When gender outcomes appear stable or unstable, are we observing social reality — or the limits of what data systems are able to measure?*
+
+It integrates country trajectories, indicator behavior, shock sensitivity, classification results, and data coverage analysis to interpret gender-related risk under political and economic volatility.
+
+
 ## ⦿ Project Purpose
 The project aims to answer the following core questions:
 
@@ -181,6 +195,7 @@ See: `/analysis/data_coverage_sensitivity.md`
 
 ## ⦿ License
 This project is intended for educational and research purposes.
+
 
 
 
